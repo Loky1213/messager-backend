@@ -89,13 +89,12 @@ class LoginView(APIView):
         serializer = UserLoginSerializer(data=request.data, context={'request': request})
         
         if serializer.is_valid():
-            tokens = serializer.validated_data['tokens']
             return success_response(
-                data=tokens,
+                data=serializer.validated_data,
                 message='Login successful',
                 status_code=status.HTTP_200_OK
             )
-        
+                
         return error_response(
             message='Login failed',
             errors=serializer.errors,
