@@ -1,16 +1,29 @@
-"""
-ASGI config for message project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.0/howto/deployment/asgi/
-"""
-
 import os
 
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from channels.security.websocket import AllowedHostsOriginValidator
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'message.settings')
 
-application = get_asgi_application()
+# Initialize Django ASGI application early to ensure the AppRegistry
+# is populated before importing code that may import ORM models.
+django_asgi_app = get_asgi_application()
+
+# We will uncomment these lines in the next step once we create the routing file
+# import chat.routing 
+
+application = ProtocolTypeRouter({
+    # 1. Standard HTTP requests are routed to normal Django views
+    "http": django_asgi_app,
+
+    # 2. WebSocket requests will be routed to our Channels consumers
+    # "websocket": AllowedHostsOriginValidator(
+    #     AuthMiddlewareStack(
+    #         URLRouter(
+    #             chat.routing.websocket_urlpatterns
+    #         )
+    #     )
+    # ),
+})
