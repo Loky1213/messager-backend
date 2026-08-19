@@ -23,7 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'rest_framework_simplejwt.token_blacklist',
+
+
     # Third-party libraries
     'rest_framework',
     'rest_framework_simplejwt',
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'chat',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -133,19 +136,22 @@ SPECTACULAR_SETTINGS = {
 
 
 # --- Channels Redis Layer Config ---
+# --- Channels Redis Layer Config ---
+# Channels
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+             "hosts": [("127.0.0.1", 6380)],
         },
     },
 }
 
-
-# --- Celery Configuration ---
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
+# Celery
+CELERY_BROKER_URL = 'redis://127.0.0.1:6380/1'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6380/1'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+AUTH_USER_MODEL = 'users.User'
